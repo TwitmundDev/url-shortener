@@ -12,6 +12,7 @@ import getStats from "@/routes/users/getStats";
 import changePassword from "@/routes/users/changePassword";
 import suspendUser from "@/routes/admin/suspendUser";
 import unsuspendUser from "@/routes/admin/unsuspendUser";
+import disableShort from "@/routes/users/disableShort";
 
 
 const app = express();
@@ -50,6 +51,7 @@ app.use(limiter);
 app.use('/user/shorten', shorten);
 app.use('/user/stats', getStats);
 app.use('/user/changepassword', changePassword);
+app.use('/user/disable', disableShort);
 
 
 app.use('/admin/users', admin_UserList);

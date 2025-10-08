@@ -13,7 +13,7 @@ router.get('/', authenticate, async (req, res) => {
         const pageSize = parseInt(req.query.pageSize as string, 10) || 10;
         const skip = (page - 1) * pageSize;
 
-        // Récupérer les URLs paginées de l'utilisateur avec le nombre d'accès
+        // Filtrer uniquement les URLs appartenant à l'utilisateur connecté
         const [urls, total] = await Promise.all([
             prisma.url.findMany({
                 where: { userId },
@@ -22,6 +22,10 @@ router.get('/', authenticate, async (req, res) => {
                 include: {
                     _count: {
                         select: { accesses: true }
+                    },
+                    accesses: {
+                        select: { createdAt: true },
+                        orderBy: { createdAt: 'desc' }
                     }
                 }
             }),
@@ -32,7 +36,8 @@ router.get('/', authenticate, async (req, res) => {
         const stats = urls.map(url => ({
             longUrl: url.longUrl,
             shortCode: url.shortCode,
-            accessCount: url._count.accesses
+            accessCount: url._count.accesses,
+            accesses: url.accesses.map(a => a.createdAt)
         }));
 
         res.json({
@@ -48,12 +53,13 @@ router.get('/', authenticate, async (req, res) => {
     }
 });
 
-router.get('/:shortCode', async (req, res) => {
+router.get('/:shortCode', authenticate, async (req, res) => {
     const { shortCode } = req.params;
+    const userId = req.user.userId;
     try {
-        // Cherche l'URL par shortCode
-        const url = await prisma.url.findUnique({
-            where: { shortCode },
+        // Cherche l'URL par shortCode ET userId
+        const url = await prisma.url.findFirst({
+            where: { shortCode, userId },
             include: {
                 accesses: {
                     select: { createdAt: true },
@@ -62,9 +68,8 @@ router.get('/:shortCode', async (req, res) => {
             }
         });
         if (!url) {
-            return res.status(404).json({ error: 'URL non trouvée' });
+            return res.status(404).json({ error: 'URL non trouvée ou accès interdit' });
         }
-        // Correction : calculer le nombre de clics à partir du nombre d'accès
         res.json({
             longUrl: url.longUrl,
             shortCode: url.shortCode,

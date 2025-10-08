@@ -8,14 +8,12 @@ const prisma = new PrismaClient();
 
 router.get('/:shortUrl', async (req, res) => {
     const { shortUrl } = req.params;
-    // console.log("request received for shortUrl:", shortUrl);
-    // console.log('Recherche du shortcode:', shortUrl);
     const urlEntry = await prisma.url.findUnique({
         where: { shortCode: shortUrl }
     });
-    // console.log('Résultat trouvé:', urlEntry);
 
-    if (urlEntry && urlEntry.longUrl) {
+    // Vérifie si l'URL existe et est active
+    if (urlEntry && urlEntry.longUrl && urlEntry.isActive) {
         // Enregistrement de l'accès
         await prisma.access.create({
             data: {

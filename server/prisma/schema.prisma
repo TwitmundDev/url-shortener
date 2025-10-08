@@ -31,6 +31,7 @@ model Url {
   longUrl    String
   shortCode  String   @unique
   createdAt  DateTime @default(now())
+  isActive   Boolean  @default(true)
   userId     Int
   user       User     @relation(fields: [userId], references: [id])
   accesses   Access[]
