@@ -14,6 +14,7 @@ router.post("/", async (req, res) => {
 
     const valid = await verifyPassword(password, user.password);
     if (!valid) return res.status(401).json({ error: "Mot de passe incorrect" });
+    if (user.isSuspended) return res.status(403).json({ error: "Compte suspendu" });
 
     const token = generateToken({ id: user.id, role: user.role });
     res.json({ token });

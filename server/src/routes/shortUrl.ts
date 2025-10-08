@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 
 router.get('/:shortUrl', async (req, res) => {
     const { shortUrl } = req.params;
+    // console.log("request received for shortUrl:", shortUrl);
     // console.log('Recherche du shortcode:', shortUrl);
     const urlEntry = await prisma.url.findUnique({
         where: { shortCode: shortUrl }

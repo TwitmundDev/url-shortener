@@ -7,6 +7,11 @@ import loginRouter from './routes/login';
 import admin_UserList from './routes/admin/userList';
 import shorten from "@/routes/users/shorten";
 import shortUrl from "@/routes/shortUrl";
+import rateLimit from "express-rate-limit";
+import getStats from "@/routes/users/getStats";
+import changePassword from "@/routes/users/changePassword";
+import suspendUser from "@/routes/admin/suspendUser";
+import unsuspendUser from "@/routes/admin/unsuspendUser";
 
 
 const app = express();
@@ -19,6 +24,19 @@ app.use(cors());
 app.use(express.json());
 
 
+// Middleware de rate limiting global
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limite à 100 requêtes par fenêtre
+    standardHeaders: true, // Retourne les headers de rate limit
+    legacyHeaders: false, // Désactive les anciens headers
+    message: {
+        error: "Trop de requêtes, veuillez réessayer plus tard."
+    }
+});
+app.use(limiter);
+
+
 // // Exemple d’API
 // app.post("/api/shorten", (req, res) => {
 //     const { url } = req.body;
@@ -28,10 +46,19 @@ app.use(express.json());
 //     res.json({ shortUrl: `https://twitmund.fr/${shortCode}` });
 // });
 
+
+app.use('/user/shorten', shorten);
+app.use('/user/stats', getStats);
+app.use('/user/changepassword', changePassword);
+
+
+app.use('/admin/users', admin_UserList);
+app.use('/admin/suspend', suspendUser);
+app.use('/admin/unsuspend', unsuspendUser);
+
+
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
-app.use('/admin/users', admin_UserList);
-app.use('/shorten', shorten);
 app.use('/', shortUrl);
 
 
