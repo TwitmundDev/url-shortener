@@ -1,20 +1,26 @@
+import { configDotenv } from "dotenv";
 import jwt from "jsonwebtoken";
-import {configDotenv} from "dotenv";
+import { PrismaClient } from '@/generated/prisma';
 
+configDotenv();
+const prisma = new PrismaClient();
 
 export interface JwtUserPayload {
-    id: string | number;
+    userId: string | number;
     role: string;
+    lastPasswordChange: number;
 }
 
-export function generateToken(user: JwtUserPayload): string {
-    configDotenv();
-    return jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET as string, { expiresIn: "1h" });
+export async function generateToken(userId: number, role: string) {
+    // Récupérer la date de dernier changement de mot de passe
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { lastPasswordChange: true } });
+    const lastPasswordChange = user?.lastPasswordChange ? Math.floor(new Date(user.lastPasswordChange).getTime() / 1000) : 0;
+    return jwt.sign({ userId, role, lastPasswordChange }, process.env.JWT_SECRET as string, { expiresIn: "1h" });
 }
 
-export function verifyToken(token: string): { userId: string | number; role: string } | null {
+export function verifyToken(token: string): JwtUserPayload | null {
     try {
-        return jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string | number; role: string };
+        return jwt.verify(token, process.env.JWT_SECRET as string) as JwtUserPayload;
     } catch {
         return null;
     }

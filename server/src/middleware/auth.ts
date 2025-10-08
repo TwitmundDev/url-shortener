@@ -1,23 +1,34 @@
 import { Request, Response, NextFunction } from 'express';
-import { verifyToken } from '../utils/JWTUtil';
+import { PrismaClient } from '@/generated/prisma';
+import jwt from 'jsonwebtoken';
+import { configDotenv } from 'dotenv';
 
-// Optionnel : définir le type du payload JWT
-interface JwtPayload {
-    id: string;
-    email: string;
-    role: string;
-    // Ajoute d'autres propriétés si besoin
-}
+const prisma = new PrismaClient();
+configDotenv();
 
-export function authenticate(req: Request, res: Response, next: NextFunction) {
+export async function authenticate(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
     if (!authHeader) return res.status(401).json({ message: 'Token manquant' });
 
     const token = authHeader.split(' ')[1];
-    const payload = verifyToken(token) as JwtPayload | null;
-    if (!payload) return res.status(401).json({ message: 'Token invalide' });
+    if (!token) return res.status(401).json({ message: 'Token manquant' });
 
-    // TypeScript reconnaît maintenant req.user grâce à la déclaration globale
-    req.user = payload;
-    next();
+    try {
+        const payload = jwt.verify(token, process.env.JWT_SECRET as string) as any;
+        // Récupérer l'utilisateur en base avec lastPasswordChange
+        const user = await prisma.user.findUnique({ where: { id: payload.userId }, select: { id: true, role: true, lastPasswordChange: true } });
+        if (!user) return res.status(401).json({ message: 'Utilisateur non trouvé' });
+
+        // Vérification de la révocation par date de changement de mot de passe
+        const lastPasswordChangeDb = user.lastPasswordChange ? Math.floor(new Date(user.lastPasswordChange).getTime() / 1000) : 0;
+        const lastPasswordChangeToken = payload.lastPasswordChange ? Number(payload.lastPasswordChange) : 0;
+        if (lastPasswordChangeToken < lastPasswordChangeDb) {
+            return res.status(401).json({ message: 'Token expiré suite à un changement de mot de passe. Veuillez vous reconnecter.' });
+        }
+
+        req.user = { userId: user.id, role: user.role };
+        next();
+    } catch (err) {
+        return res.status(401).json({ message: 'Token invalide ou expiré' });
+    }
 }

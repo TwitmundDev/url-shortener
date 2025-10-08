@@ -1,7 +1,7 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
-import {PrismaClient} from '../generated/prisma';
-import { verifyPassword } from "../utils/HashUtil";
+import {PrismaClient} from '@/generated/prisma';
+import { verifyPassword } from "@/utils/HashUtil";
 import {generateToken} from "@/utils/JWTUtil";
 
 const router = Router();
@@ -16,7 +16,7 @@ router.post("/", async (req, res) => {
     if (!valid) return res.status(401).json({ error: "Mot de passe incorrect" });
     if (user.isSuspended) return res.status(403).json({ error: "Compte suspendu" });
 
-    const token = generateToken({ id: user.id, role: user.role });
+    const token = await generateToken(user.id, user.role);
     res.json({ token });
 });
 

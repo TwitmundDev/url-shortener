@@ -40,10 +40,12 @@ router.post('/', authenticate, async (req, res) => {
         // Hasher le nouveau mot de passe
         const hashedNewPassword = await hashPassword(newPassword);
 
+        // Mettre à jour le mot de passe et la date de changement
         await prisma.user.update({
             where: { id: userId },
             data: {
                 password: hashedNewPassword,
+                lastPasswordChange: new Date() // Mise à jour de la date
             }
         });
 
