@@ -16,7 +16,7 @@ import disableShort from "@/routes/users/disableShort";
 
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const baseUrl = process.env.BASE_URL + ":" + PORT || `http://localhost:${PORT}`;
 
 console.log(`🔗 Base URL: ${baseUrl}`);

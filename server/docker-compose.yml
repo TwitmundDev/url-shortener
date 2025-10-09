@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: express_api
+    ports:
+      - "4000:4000"
+    environment:
+      - DATABASE_URL=mysql://urlShortener:)YKK4HQg(hOyTg_*@db:3306/urlshortener
+    depends_on:
+      - db
+    command: sh -c "./wait-for-mysql.sh && npx prisma migrate deploy --schema=./prisma/schema.prisma && npm run dev"
+
+  studio:
+    build: .
+    container_name: prisma_studio
+    ports:
+      - "5555:5555"
+    environment:
+      - DATABASE_URL=mysql://urlShortener:)YKK4HQg(hOyTg_*@db:3306/urlshortener
+    depends_on:
+      - db
+    command: sh -c "./wait-for-mysql.sh && npx prisma studio"
+
+  db:
+    image: mysql:8
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: urlshortener
+      MYSQL_USER: urlShortener
+      MYSQL_PASSWORD: )YKK4HQg(hOyTg_*
+    volumes:
+      - mysqldata:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysqldata:
