@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE Url ADD COLUMN expiration DATETIME(3) NULL,
+    ADD COLUMN isActive BOOLEAN NOT NULL DEFAULT true;
