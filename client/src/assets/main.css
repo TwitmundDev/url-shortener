@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #FF7A59;
+  --color-btn-secondary: #FFA18A;
+  --color-secondary: #FFD8A9;
+  --color-secondary-dark: #301E18;
+  --color-bg: #1A1410;
+  --color-surface: #241C17;
+  --color-text-primary: #FDF8F3;
+  --color-text-secondary: #DCCFC2;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-accent: #FF9E7D;
+
+    --hdr-gradient: radial-gradient(
+      farthest-corner circle at top left,
+      #301E18 4%, #1A1410 49%
+    );
+  --sdr-gradient: radial-gradient(farthest-corner circle at top left, #301e18 4%, #1a1410 49%);
+
+  background: var(--hdr-gradient);
+
+}
+
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.bg-surface {
+  background-color: var(--color-surface);
+}
+
+.border-border {
+  border-color: var(--color-border);
+}
+
+.border-form{
+  border: 1px solid var(--color-border);
+}
+
+.border-input{
+  border: 1px solid var(--color-text-secondary);
+}
+
+.login-form{
+  color: var(--color-text-primary);
+}
+.login-form input{
+  border-radius: 15px;
+  transition: border-color 0.4s;
+  background: #2C1B15;
+}
+.login-form input:focus{
+  transition: border-color 0.4s;
+  border: 1px solid var(--color-primary);
+}
+.form-submit-button:hover{
+  background-color: var(--color-btn-secondary);
+  transition: background-color 0.4s, color 0.4s;
+}
+.form-submit-button{
+  border-radius: 15px;
+  transition: background-color 0.4s, color 0.4s;
+}
+.login-form label{
+  font-size: 1.2rem;
+}
+
+
+.text-text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.text-bg {
+  color: var(--color-bg);
+}
+
+.bg-secondary-dark {
+  background-color: var(--color-secondary-dark);
+}
+
+/*.navBtn {*/
+/*  @apply px-4 py-2 rounded transition-colors duration-300;*/
+/*  background-color: var(--color-primary);*/
+/*  color: var(--color-bg);*/
+/*  border: none;*/
+/*  cursor: pointer;*/
+/*}*/
+.navBtn:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.divShadow {
+  box-shadow: 0 8px 24px rgba(255, 122, 89, 0.15);
+}
+
+.custom-toast {
+  background: #232946;
+  color: #eebbc3;
+  border-radius: 8px;
+  font-family: 'sans-serif';
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: var(--sdr-gradient);
+}

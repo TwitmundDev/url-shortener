@@ -16,8 +16,9 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
     try {
         const payload = jwt.verify(token, process.env.JWT_SECRET as string) as any;
         // Récupérer l'utilisateur en base avec lastPasswordChange
-        const user = await prisma.user.findUnique({ where: { id: payload.userId }, select: { id: true, role: true, lastPasswordChange: true } });
+        const user = await prisma.user.findUnique({ where: { id: payload.userId }, select: { id: true, role: true, lastPasswordChange: true, isSuspended: true } });
         if (!user) return res.status(401).json({ message: 'Utilisateur non trouvé' });
+        if (user.isSuspended) return res.status(403).json({ error: "Compte suspendu" });
 
         // Vérification de la révocation par date de changement de mot de passe
         const lastPasswordChangeDb = user.lastPasswordChange ? Math.floor(new Date(user.lastPasswordChange).getTime() / 1000) : 0;

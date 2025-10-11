@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import Navbar from "@/views/_base/Navbar.vue";
 
 const longUrl = ref("");
 const shortUrl = ref("");
@@ -16,11 +17,4 @@ async function shorten() {
 </script>
 
 <template>
-  <main>
-    <h1>Raccourcisseur d’URL</h1>
-    <input v-model="longUrl" placeholder="Colle ton URL ici" />
-    <button @click="shorten">Raccourcir</button>
-
-    <p v-if="shortUrl">👉 Lien court : <a :href="shortUrl">{{ shortUrl }}</a></p>
-  </main>
 </template>
