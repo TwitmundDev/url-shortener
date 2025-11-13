@@ -1,7 +1,15 @@
-<script setup></script>
+<script setup>
+import './assets/main.css'
+import Navbar from "@/views/_base/Navbar.vue";
+import Footer from "@/views/_base/Footer.vue";
+</script>
 
 <template>
-<router-view/>
+  <Navbar />
+  <router-view/>
+  <Footer/>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+</style>

@@ -5,6 +5,7 @@ import { generateUniqueShortCode } from "@/utils/urlManager";
 
 const router = Router();
 const prisma = new PrismaClient();
+//todo si compte suspendu, ne pas autoriser l'accès
 
 router.get('/', authenticate, async (req, res) => {
     try {
