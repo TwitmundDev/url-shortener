@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/Login.vue'
+import NotFound from '@/views/_base/404.vue'
+import Dashboard from '@/views/dashboard/HomeDashboard.vue'
+import Register from "@/views/Register.vue";
 
 
 
@@ -16,6 +19,22 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard
+
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: "404NotFound",
+      component: NotFound
     }
   ],
 })

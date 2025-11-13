@@ -17,4 +17,5 @@ async function shorten() {
 </script>
 
 <template>
+  <p>cccc</p>
 </template>
