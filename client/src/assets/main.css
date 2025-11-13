@@ -17,14 +17,20 @@
       #301E18 4%, #1A1410 49%
     );
   --sdr-gradient: radial-gradient(farthest-corner circle at top left, #301e18 4%, #1a1410 49%);
-
-  background: var(--hdr-gradient);
-
+  background: var(--sdr-gradient);
 }
 
-
+.text-text-primary{
+  color: var(--color-text-primary);
+}
+.text-text-secondary{
+  color: var(--color-text-secondary);
+}
 .bg-primary {
   background-color: var(--color-primary);
+}
+.text-text-tertiary {
+  color: var(--color-btn-secondary);
 }
 
 .bg-accent {
