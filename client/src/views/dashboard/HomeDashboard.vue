@@ -5,6 +5,7 @@
 <template>
 
   <div class="container">
+    <p>Home Dashboard</p>
 
   </div>
 

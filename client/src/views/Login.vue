@@ -28,7 +28,7 @@ async function sendLoginRequest(event) {
     });
     return;
   } else {
-    showPasswordCriteria.value = false;
+    await router.push({name: 'dashboard'})
   }
   try {
     const res = await axios.post(API_URL + "/login", {

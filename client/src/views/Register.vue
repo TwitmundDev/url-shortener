@@ -24,6 +24,10 @@ function verifyEmail(email) {
   return emailRegex.test(email);
 }
 
+function verifyConfirmPassword(password, confirmPassword) {
+  return password === confirmPassword;
+}
+
 async function sendLoginRequest(event) {
   event.preventDefault();
   // console.log("Form submitted");
@@ -43,22 +47,28 @@ async function sendLoginRequest(event) {
     });
     return;
   }
+  if (verifyConfirmPassword(event.target.password.value, event.target.passwordConfirm.value) === false) {
+    toast.error("Les mots de passe ne correspondent pas.", {
+      autoClose: 2000,
+    });
+    return;
+  }
   try {
-    const res = await axios.post(API_URL + "/login", {
+    const res = await axios.post(API_URL + "/register", {
+      username: event.target.username.value,
       email: event.target.email.value,
       password: event.target.password.value
     });
 
-    Cookies.set("jwt", res.data.token, {expires: 1, secure: true});
-    toast.success("Connexion réussie !", {
+    toast.success("Inscription réussie ! Veuillez vous conncter", {
       autoClose: 1000,
     });
-    await router.push({name: 'home'})
-
+    await router.push({name: 'login'})
 
     // Redirection ou autre logique ici
   } catch (err) {
-    toast.error("Échec de la connexion. Vérifiez vos identifiants.", {
+    console.log(err)
+    toast.error("Échec de la l'inscription. Vérifiez vos identifiants.", {
       autoClose: 1000,
     });
   }

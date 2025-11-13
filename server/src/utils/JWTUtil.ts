@@ -1,6 +1,7 @@
 import { configDotenv } from "dotenv";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from '@/generated/prisma';
+import {NextFunction, Request, Response} from "express";
 
 configDotenv();
 const prisma = new PrismaClient();
@@ -18,9 +19,19 @@ export async function generateToken(userId: number, role: string) {
     return jwt.sign({ userId, role, lastPasswordChange }, process.env.JWT_SECRET as string, { expiresIn: "1h" });
 }
 
-export function verifyToken(token: string): JwtUserPayload | null {
+export async function verifyToken(req: Request, res: Response, next: NextFunction) {
+    const {token} = req.body;
+    if (!token) return null;
+
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+        console.error('JWT_SECRET non défini');
+        return null;
+    }
+
     try {
-        return jwt.verify(token, process.env.JWT_SECRET as string) as JwtUserPayload;
+        const payload = jwt.verify(token, secret) as JwtUserPayload;
+        return payload;
     } catch {
         return null;
     }

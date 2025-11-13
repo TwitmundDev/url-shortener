@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
+import HomeView from '@/views/Home.vue'
 import LoginView from '@/views/Login.vue'
 import NotFound from '@/views/_base/404.vue'
 import Dashboard from '@/views/dashboard/HomeDashboard.vue'
 import Register from "@/views/Register.vue";
+import AuthMiddleware from "@/middleware/auth.js";
+
 
 
 
@@ -23,7 +25,10 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: Dashboard
+      component: Dashboard,
+      meta:{
+        middleware: [AuthMiddleware]
+      }
 
     },
     {
