@@ -65,7 +65,7 @@ app.use('/login', loginRouter);
 app.use('/', shortUrl);
 
 
-app.use('/validatejwt', validateJWT);
+app.use('/validate', validateJWT);
 
 
 
