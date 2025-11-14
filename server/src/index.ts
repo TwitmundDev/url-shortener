@@ -14,6 +14,7 @@ import suspendUser from "@/routes/admin/suspendUser";
 import unsuspendUser from "@/routes/admin/unsuspendUser";
 import disableShort from "@/routes/users/disableShort";
 import validateJWT from "@/routes/validateJWT";
+import HealthCheck from "@/routes/HeathCheck";
 
 
 const app = express();
@@ -62,10 +63,11 @@ app.use('/admin/unsuspend', unsuspendUser);
 
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
-app.use('/', shortUrl);
-
-
 app.use('/validate', validateJWT);
+
+app.use("/health", HealthCheck);
+
+app.use('/', shortUrl);
 
 
 
