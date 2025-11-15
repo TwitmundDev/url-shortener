@@ -5,6 +5,8 @@ import NotFound from '@/views/_base/404.vue'
 import Dashboard from '@/views/dashboard/HomeDashboard.vue'
 import Register from "@/views/Register.vue";
 import AuthMiddleware from "@/middleware/auth.js";
+import {isBackendUp} from "@/services/health.js";
+import Unavailable from "@/views/Unavailable.vue";
 
 
 
@@ -40,8 +42,16 @@ const router = createRouter({
       path: '/:pathMatch(.*)*',
       name: "404NotFound",
       component: NotFound
-    }
+    },
+    { path: '/backend-down', name: 'BackendDown', component: Unavailable },
   ],
 })
+
+router.beforeEach(async (to) => {
+  if (to.name === 'BackendDown') return true;
+  const up = await isBackendUp();
+  if (!up) return { name: 'BackendDown' };
+  return true;
+});
 
 export default router

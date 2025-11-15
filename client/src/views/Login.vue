@@ -71,7 +71,6 @@ async function sendLoginRequest(event) {
   margin-bottom: -15px;
 }
 
-
 .custom-toast {
   background: #232946;
   color: #eebbc3;
